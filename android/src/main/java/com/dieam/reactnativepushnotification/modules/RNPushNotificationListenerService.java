@@ -91,6 +91,10 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
         }
         JSONObject data = getPushData(notificationData.get("data"));
 
+        if(data == null) {
+            data = getPushDataForMC(notificationData);
+        }
+
         if (data != null) {
             if (!bundle.containsKey("message")) {
                 bundle.putString("message", data.optString("alert", null));
@@ -148,6 +152,14 @@ public class RNPushNotificationListenerService extends FirebaseMessagingService 
     }
 
     private JSONObject getPushData(String dataString) {
+        try {
+            return new JSONObject(dataString);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private JSONObject getPushDataForMC (Map<String, String> dataString) {
         try {
             return new JSONObject(dataString);
         } catch (Exception e) {
